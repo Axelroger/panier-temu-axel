@@ -21,7 +21,7 @@
     #videoOverlay{
       display:none;position:fixed;inset:0;background:#000;align-items:center;justify-content:center;z-index:9999
     }
-    #videoOverlay video{width:100%;height:100%;object-fit:cover}
+    #player{width:100%;height:100%}
   </style>
 </head>
 <body>
@@ -37,14 +37,46 @@
   </div>
   <!-- Overlay vidéo plein écran -->
   <div id="videoOverlay" role="dialog" aria-hidden="true">
-    <iframe id="mainVideo" width="100%" height="100%" src="https://www.youtube.com/embed/1qhsN_6Xe5Y?start=55&autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="player"></div>
   </div>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     const DISPLAY_LINK = "https://panier-temu-axel.vercel.app/";
     document.getElementById('linkText').textContent = DISPLAY_LINK;
     const linkCard = document.getElementById('linkCard');
     const videoOverlay = document.getElementById('videoOverlay');
-    const mainVideo = document.getElementById('mainVideo');
+    
+    let player;
+    
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: '1qhsN_6Xe5Y',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        },
+        playerVars: {
+          'start': 55,
+          'controls': 1,
+          'fs': 1
+        }
+      });
+    }
+    
+    function onPlayerReady(event) {
+      // Vidéo prête
+    }
+    
+    function onPlayerStateChange(event) {
+      // Quand la vidéo finit (state = 0)
+      if (event.data == YT.PlayerState.ENDED) {
+        videoOverlay.style.display = 'none';
+        try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+        window.close();
+      }
+    }
     
     function closeCurrentPage() {
       window.close();
@@ -56,25 +88,24 @@
         if (videoOverlay.requestFullscreen) await videoOverlay.requestFullscreen().catch(() => {});
         else if (videoOverlay.webkitRequestFullscreen) await videoOverlay.webkitRequestFullscreen().catch(() => {});
       } catch(e) {}
+      
+      setTimeout(() => {
+        player.playVideo();
+      }, 300);
     }
-    
-    document.addEventListener('click', () => {
-      openVideoFullscreen();
-    }, { once: true });
-    
-    document.addEventListener('touchstart', () => {
-      openVideoFullscreen();
-    }, { once: true });
     
     linkCard.addEventListener('click', (e) => {
       e.preventDefault();
       openVideoFullscreen();
     });
     
-    mainVideo.addEventListener('ended', () => {
-      videoOverlay.style.display = 'none';
-      try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
-      closeCurrentPage();
+    // Fermer quand on clique en dehors
+    videoOverlay.addEventListener('click', (e) => {
+      if (e.target === videoOverlay) {
+        player.stopVideo();
+        videoOverlay.style.display = 'none';
+        try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+      }
     });
   </script>
 </body>
