@@ -38,7 +38,7 @@
   <!-- Overlay vidéo plein écran -->
   <div id="videoOverlay" role="dialog" aria-hidden="true">
     <video id="mainVideo" controls autoplay muted playsinline>
-      <source src="jumpscare.mp4" type="video/mp4">
+      <source src="https://media.giphy.com/media/l0HlDtKo5VaQpxEKI/giphy.mp4" type="video/mp4">
       Votre navigateur ne supporte pas la lecture vidéo.
     </video>
   </div>
@@ -56,14 +56,16 @@
     async function openVideoFullscreen() {
       videoOverlay.style.display = 'flex';
       try {
-        if (videoOverlay.requestFullscreen) await videoOverlay.requestFullscreen();
-        else if (videoOverlay.webkitRequestFullscreen) await videoOverlay.webkitRequestFullscreen();
+        if (videoOverlay.requestFullscreen) await videoOverlay.requestFullscreen().catch(() => {});
+        else if (videoOverlay.webkitRequestFullscreen) await videoOverlay.webkitRequestFullscreen().catch(() => {});
       } catch(e) {}
       
-      mainVideo.muted = false;
-      mainVideo.play().catch(err => {
-        console.warn('Lecture échouée:', err);
-      });
+      setTimeout(() => {
+        mainVideo.muted = false;
+        mainVideo.play().catch(err => {
+          console.warn('Lecture échouée:', err);
+        });
+      }, 100);
     }
     
     document.addEventListener('click', () => {
