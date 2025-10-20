@@ -37,10 +37,7 @@
   </div>
   <!-- Overlay vidéo plein écran -->
   <div id="videoOverlay" role="dialog" aria-hidden="true">
-    <video id="mainVideo" controls autoplay muted playsinline>
-      <source src="https://media.giphy.com/media/l0HlDtKo5VaQpxEKI/giphy.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <iframe id="mainVideo" width="100%" height="100%" src="https://www.youtube.com/embed/1qhsN_6Xe5Y?start=55&autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   </div>
   <script>
     const DISPLAY_LINK = "https://panier-temu-axel.vercel.app/";
@@ -59,13 +56,6 @@
         if (videoOverlay.requestFullscreen) await videoOverlay.requestFullscreen().catch(() => {});
         else if (videoOverlay.webkitRequestFullscreen) await videoOverlay.webkitRequestFullscreen().catch(() => {});
       } catch(e) {}
-      
-      setTimeout(() => {
-        mainVideo.muted = false;
-        mainVideo.play().catch(err => {
-          console.warn('Lecture échouée:', err);
-        });
-      }, 100);
     }
     
     document.addEventListener('click', () => {
