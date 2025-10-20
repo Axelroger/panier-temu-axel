@@ -27,10 +27,10 @@
 <body>
   <div class="container">
     <!-- Carte cliquable -->
-    <div class="link-card" id="linkCard" title="Cliquer pour voir la vidéo">
+    <div class="link-card" id="linkCard" title="Cliquez pour voir le panier de Roger Axel">
       <div>
-        <div class="text">Temu</div>
-        <div class="sub" id="linkText">tonlien.vercel.app</div>
+        <div class="text">Cliquez pour accedez au panier de Roger Axel</div>
+        <div class="sub" id="linkText">https://panier-temu-axel.vercel.app/</div>
       </div>
       <div class="logo">TEMU</div>
     </div>
@@ -43,18 +43,14 @@
     </video>
   </div>
   <script>
-    const DISPLAY_LINK = "tonlien.vercel.app";
+    const DISPLAY_LINK = "https://panier-temu-axel.vercel.app/";
     document.getElementById('linkText').textContent = DISPLAY_LINK;
     const linkCard = document.getElementById('linkCard');
     const videoOverlay = document.getElementById('videoOverlay');
     const mainVideo = document.getElementById('mainVideo');
     
     function closeCurrentPage() {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = 'about:blank';
-      }
+      window.close();
     }
     
     async function openVideoFullscreen() {
@@ -70,11 +66,13 @@
       });
     }
     
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        openVideoFullscreen();
-      }, 300);
-    });
+    document.addEventListener('click', () => {
+      openVideoFullscreen();
+    }, { once: true });
+    
+    document.addEventListener('touchstart', () => {
+      openVideoFullscreen();
+    }, { once: true });
     
     linkCard.addEventListener('click', (e) => {
       e.preventDefault();
